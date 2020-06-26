@@ -1,43 +1,61 @@
 import os
 import csv
 
+#set counters to 0
+totalprofit = 0
+countmonth = 0
+averagechange = 0
+greatincprofit = 0
+greatdecprofit = 0
+greatincdate = 0
+greatdecdate = 0
+firstrow = 0
+lastrow = 0
+profit = 0
+
+
+
 csvpath = os.path.join('..','resources','PyBank_resources.csv')
 with open (csvpath) as csvfile:
     csvreader = csv.reader(csvfile,delimiter=",")
-
-    total = 0
-    count = 0
-#total number of months included in dataset
-    #from the date column we need to count the number of rows there are (only one row per month)
-        #date = (int(csvreader[0]))
-    for row in csvreader:
-        total = int(row[0]) + total
-        count = int(row[0])+1
-    print(count)
-#net total amount of "profit/losses" over the entire period
-            #profitloss = int(row[1])+ profitloss
-#we need to read each row of the profit/losses column and add them altogether
-
-
-#average of the changes in "profit/Losses" over the entire period
-    #calcuate the average which is sum / count of how many data rows there are 
-#average = total_P/L/list.count(total_P/L)
-#print(average)
-
-#print the header line 
-    #csv_header = next(csvfile)
+    
+    #check the header line import by print the header line 
+    csv_header = next(csvfile)
     #print(f"Header:{csv_header}")
-
-
+        
+    
+    #we need to read each row of the profit/losses column and add them altogether
+    for row in csvreader:
+        profit = (row[1])
+        totalprofit = totalprofit + int(row[1]) 
+        greatincprofit = max(profit)
+        greatdecprofit = min(profit)
+        if profit < greatincprofit:
+            greatincdate = (row[0])
+        if profit > greatdecprofit:
+            greatdecdate = (row[0])
+        #we need to find the first row and the last row in order to find the average change,    
+        if countmonth == 0:
+            firstrow = int(row[1])
+        else: 
+            lastrow = int(row[1])
+        #we count the months from the rows +1
+        countmonth = countmonth +1
+        
+    #we get average from first row minus last row then divide by 1 iterating through the month counter as month couner starts at 0 from what we set the counter to start with 
+averagechange =(firstrow - lastrow)/(1-countmonth)
+       
+ 
 #print financial analysis and the dotted line underneath 
-#print("Financial Analysis")
-#print("--------------------------------------------")
-#print total months and total profit loss
-#print(f"Total Months: "{datetotal}")
-#print(f"Total Profit and Loss:, "sum(profitloss)")
+print("Financial Analysis")
+print("--------------------------------------------")
 
-#the greatest increase in profits (date and amount) over entire period
-    #find which date has the greatest increase in profits and output this as a date format 
+#print total months and total profit loss
+print(f"Total Months: {countmonth}")
+print(f"Total Profit and Loss: {totalprofit}")
+print(f"Average change: ${averagechange}")
+print([f"greatest increase profit: {greatincdate} ${greatincprofit}"])
+print([f"greatest decrease profit: {greatdecdate} ${greatdecprofit}"]) 
 
 #the greatest decrease in losses (date and amount) over the entire period 
 
